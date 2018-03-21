@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -10,13 +11,16 @@ import (
 
 func main() {
 
-	files := os.Args[1:]
+	pkg := flag.String("pkg", "main", "The package name.")
+	flag.Parse()
+	files := flag.Args()
+
 	output, err := os.Create("./assets.go")
 	if err != nil {
 		panic(err.Error())
 	}
 
-	output.Write([]byte("package main\n\n"))
+	output.Write([]byte(fmt.Sprintf("package %s\n\n", *pkg)))
 	output.Write([]byte("var AssetData = map[string][]byte{\n"))
 
 	for _, path := range files {
